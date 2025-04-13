@@ -7,7 +7,8 @@ CREATE TABLE Staging_MeterData (
     CustomerID INT,
     Timestamp DATETIME,
     kWh DECIMAL(10,2),
-    LoadBatchID INT  -- For tracking
+    LoadBatchID INT,  -- For tracking
+	LoadDate DATETIME DEFAULT GETDATE()
 );
 
 -- Staging for customers
@@ -19,10 +20,19 @@ CREATE TABLE Staging_Customers (
     LoadBatchID INT  -- For tracking
 );
 
--- Error Logging: Error tables for rejected rows
-CREATE TABLE Staging_Errors (
+-- Error Logging
+CREATE TABLE ETL_Errors (
     ErrorID INT IDENTITY(1,1),
     ErrorTime DATETIME DEFAULT GETDATE(),
     ErrorMessage NVARCHAR(500),
     SourceData NVARCHAR(MAX)
+);
+
+-- Batch Tracking
+CREATE TABLE ETL_Batches (
+    BatchID INT IDENTITY(1,1),
+    StartTime DATETIME DEFAULT GETDATE(),
+    EndTime DATETIME,
+    Status NVARCHAR(20),
+    RowsProcessed INT
 );
